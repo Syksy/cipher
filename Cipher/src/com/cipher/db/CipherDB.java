@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cipher.engine;
+package com.cipher.db;
 
 // Java MySQL packages
 import java.sql.Connection;
@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+// Cipher engine
+import com.cipher.engine.Tile;
 
 /**
  *
@@ -54,9 +56,18 @@ public class CipherDB {
                     + "x INT, y INT, z INT, " // Each tile has a x,y,z coordinate
                     + "symbol CHAR(1), " // For the time being tiles are just represented with characters
                     + "uniqid INT, " // Connect each tile to something unique (building, character, ...)
+                    //+ "properties xml, " // Tile properties are stored using XML formatting, allowing flexibility
                     + "PRIMARY KEY (x, y, z)" // x,y,z is the unique combined key to the row
                     + ")"
             );
+            // Create the table for edges that lie between tiles (on a z-axis plane)
+            statement.addBatch("CREATE TABLE IF NOT EXISTS edges(" 
+                    + "x1 INT, x2 INT, y1 INT, y2 INT, z INT, " // Uniquely define the edge location on a certain z plane
+                    //+ "properties xml, " // Edge properties are stored using XML formatting, allowing flexibility
+                    + "PRIMARY KEY (x1, x2, y1, y2, z)" // To access an edge one has to provide two {x,y} coordinates on a z plane
+                    + ")"
+            );
+            // Execute the creation for the database framework
             statement.executeBatch();
         }catch (SQLException e) {
             System.out.print("\nError creating a blank slate for the Cipher MySQL DB: " + e + "\n");       

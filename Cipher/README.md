@@ -22,3 +22,5 @@ XAMPP 7.2.6 / PHP 7.2.6 (Jul 1, 2018; https://www.apachefriends.org/download.htm
 Vaadin plugin for Netbeans 8.2 ( Jul 8, 2018; http://plugins.netbeans.org/plugin/50531/vaadin-plug-in-for-netbeans )
 
 + Spring Boot (springframework) used for generating the base for the Vaadin UI with MySQL (Jul 10, 2018; http://start.spring.io/ )
+
+Inkscape (v0.91) based GUI experimenting (.svg-files as vector graphics, planned output as transparency-allowing .png)

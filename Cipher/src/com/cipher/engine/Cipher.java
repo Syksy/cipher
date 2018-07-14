@@ -5,7 +5,11 @@
  */
 package com.cipher.engine;
 
+// Cipher DB handling
+import com.cipher.db.*;
+
 import java.util.List;
+
 
 /**
  *
