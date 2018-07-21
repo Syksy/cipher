@@ -23,4 +23,28 @@ public class Edge {
         this.xyz2 = new Coord(x2, y2, z);
     }
     
+    // Setters
+    public void setX1(int x1){
+        this.xyz1.setX(x1);
+    }
+    public void setX2(int x2){
+        this.xyz2.setX(x2);
+    }
+    public void setY1(int y1){
+        this.xyz1.setY(y1);
+    }
+    public void setY2(int y2){
+        this.xyz2.setY(y2);
+    }
+    public void setZ(int z){
+        this.xyz1.setZ(z);
+        this.xyz2.setZ(z);
+    }
+    // Getters
+    public int getX1(){ return this.xyz1.getX(); };
+    public int getX2(){ return this.xyz2.getX(); };
+    public int getY1(){ return this.xyz1.getY(); };
+    public int getY2(){ return this.xyz2.getY(); };
+    public int getZ(){ return this.xyz1.getZ(); }; // xyz1 and xyz2 should have equal z-plane
+    
 }

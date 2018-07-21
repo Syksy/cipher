@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 // Cipher engine
 import com.cipher.engine.Tile;
+import com.cipher.engine.Edge;
 
 /**
  *
@@ -56,14 +57,14 @@ public class CipherDB {
                     + "x INT, y INT, z INT, " // Each tile has a x,y,z coordinate
                     + "symbol CHAR(1), " // For the time being tiles are just represented with characters
                     + "uniqid INT, " // Connect each tile to something unique (building, character, ...)
-                    //+ "properties xml, " // Tile properties are stored using XML formatting, allowing flexibility
+                    //+ "properties xml, " // Tile properties are stored using XML formatting or such, allowing flexibility
                     + "PRIMARY KEY (x, y, z)" // x,y,z is the unique combined key to the row
                     + ")"
             );
             // Create the table for edges that lie between tiles (on a z-axis plane)
             statement.addBatch("CREATE TABLE IF NOT EXISTS edges(" 
                     + "x1 INT, x2 INT, y1 INT, y2 INT, z INT, " // Uniquely define the edge location on a certain z plane
-                    //+ "properties xml, " // Edge properties are stored using XML formatting, allowing flexibility
+                    //+ "properties xml, " // Edge properties are stored using XML formatting or such, allowing flexibility
                     + "PRIMARY KEY (x1, x2, y1, y2, z)" // To access an edge one has to provide two {x,y} coordinates on a z plane
                     + ")"
             );
@@ -74,6 +75,9 @@ public class CipherDB {
         }
     }
     
+    /*
+    * FUNCTIONS FOR INTERACTING WITH OBJECTS CHARACTERISTIC FOR THE CIPHER ENGINE
+    */
     // Connect to the Cipher DB and get all the available tiles
     public List<Tile> getTiles(){
         List<Tile> tiles = new ArrayList<Tile>();
@@ -97,7 +101,55 @@ public class CipherDB {
         }
         return tiles;
     }
+    // Connect to the Cipher DB and get all the available edges
+    public List<Edge> getEdges(){
+        List<Edge> edges = new ArrayList<Edge>();
+        try{
+            System.out.print("\nFetching tiles...\n");       
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z, FROM tiles");
+            while(resultSet.next()){
+               //Retrieve by column name
+               int x1 = resultSet.getInt("x1");
+               int y1 = resultSet.getInt("y1");
+               int x2 = resultSet.getInt("x2");
+               int y2 = resultSet.getInt("x2");
+               int z = resultSet.getInt("z");
+               char symbol = (char) resultSet.getString("symbol").charAt(0);
+               edges.add(new Edge(x1,y1,x2,y2,z));
+            }
+            resultSet.close();
+            statement.close();
+        }catch(Exception e){
+                System.out.print("\nError fetching tiles: " + e + "\n");       
+        }
+        return edges;
+    }
+    // Add a Cipher tile to the database
+    public void addTile(Tile tile){
+        try{
+            String str = "INSERT INTO tiles(x, y, z, symbol, uniqid) VALUES(" + tile.getX() + ", " + tile.getY() + ", " + tile.getZ() + ", '" + tile.getSymbol() + "', 0)";
+            statement.addBatch(str);
+            statement.executeBatch();
+        }catch(Exception e){
+            System.out.print("\nError adding a tile to the CipherDB: " + e + "\n");
+        }
+    }
+    // Add a Cipher edge to the database
+    public void addEdge(Edge edge){
+        try{
+            String str = "INSERT INTO edges(x1, y1, x2, y2, z) VALUES(" + edge.getX1() + ", " + edge.getY1() + ", " + edge.getX2() + ", " + edge.getY2() + ", " + edge.getZ() + ")";
+            statement.addBatch(str);
+            statement.executeBatch();
+        }catch(Exception e){
+            System.out.print("\nError adding a tile to the CipherDB: " + e + "\n");
+        }
+    }
     
+    
+    /*
+    * FUNCTIONS FOR CONNECTING TO THE SQL DATABASE
+    */
     // Connect to the database
     public Connection connect() {
         if (connection == null) {
@@ -111,7 +163,6 @@ public class CipherDB {
         }
         return connection;
     }
-
     // Disconnect from the database and clean up
     public void disconnect() {
         if (connection != null) {
@@ -130,18 +181,4 @@ public class CipherDB {
         }
     }
 
-    // Add a Cipher tile to the database
-    public void addTile(Tile tile){
-        try{
-            String str = "INSERT INTO tiles(x, y, z, symbol, uniqid) VALUES(" + tile.getX() + ", " + tile.getY() + ", " + tile.getZ() + ", '" + tile.getSymbol() + "', 0)";
-            statement.addBatch(str);
-            statement.executeBatch();
-        }catch(Exception e){
-            System.out.print("\nError adding a tile to the CipherDB: " + e + "\n");
-        }
-    }
-    // Get all tiles in the database
-    //public Tile[] getTiles(){
-        
-    //}
 }
