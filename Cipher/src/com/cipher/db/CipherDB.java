@@ -63,9 +63,9 @@ public class CipherDB {
             );
             // Create the table for edges that lie between tiles (on a z-axis plane)
             statement.addBatch("CREATE TABLE IF NOT EXISTS edges(" 
-                    + "x1 INT, x2 INT, y1 INT, y2 INT, z INT, " // Uniquely define the edge location on a certain z plane
+                    + "x1 INT, y1 INT, x2 INT, y2 INT, z INT, " // Uniquely define the edge location on a certain z plane
                     //+ "properties xml, " // Edge properties are stored using XML formatting or such, allowing flexibility
-                    + "PRIMARY KEY (x1, x2, y1, y2, z)" // To access an edge one has to provide two {x,y} coordinates on a z plane
+                    + "PRIMARY KEY (x1, y1, x2, y2, z)" // To access an edge one has to provide two {x,y} coordinates on a z plane
                     + ")"
             );
             // Execute the creation for the database framework
@@ -105,34 +105,36 @@ public class CipherDB {
     public List<Edge> getEdges(){
         List<Edge> edges = new ArrayList<Edge>();
         try{
-            System.out.print("\nFetching tiles...\n");       
+            System.out.print("\nFetching edges...\n");       
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z, FROM tiles");
+            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z FROM edges");
             while(resultSet.next()){
                //Retrieve by column name
                int x1 = resultSet.getInt("x1");
                int y1 = resultSet.getInt("y1");
                int x2 = resultSet.getInt("x2");
-               int y2 = resultSet.getInt("x2");
+               int y2 = resultSet.getInt("y2");
                int z = resultSet.getInt("z");
-               char symbol = (char) resultSet.getString("symbol").charAt(0);
+               //char symbol = (char) resultSet.getString("symbol").charAt(0);
                edges.add(new Edge(x1,y1,x2,y2,z));
             }
             resultSet.close();
             statement.close();
         }catch(Exception e){
-                System.out.print("\nError fetching tiles: " + e + "\n");       
+                System.out.print("\nError fetching edges: " + e + "\n");       
         }
         return edges;
     }
     // Add a Cipher tile to the database
-    public void addTile(Tile tile){
+    public boolean addTile(Tile tile){
         try{
             String str = "INSERT INTO tiles(x, y, z, symbol, uniqid) VALUES(" + tile.getX() + ", " + tile.getY() + ", " + tile.getZ() + ", '" + tile.getSymbol() + "', 0)";
             statement.addBatch(str);
             statement.executeBatch();
+            return true;
         }catch(Exception e){
             System.out.print("\nError adding a tile to the CipherDB: " + e + "\n");
+            return false;
         }
     }
     // Add a Cipher edge to the database
