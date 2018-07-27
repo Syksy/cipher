@@ -16,11 +16,20 @@ public class Edge {
     // Edge can be defined uniquely using two tiles, for which the z-plane value is equal
     private Coord xyz1;
     private Coord xyz2;
+    // Symbol for naive visualizations
+    private char symbol;
     
-    // Two {x,y} coordinates that have to be located on the same z-axis plane
+    // Two {x,y} coordinates that have to be located on the same z-axis plane; default symbol
     public Edge(int x1, int x2, int y1, int y2, int z){
         this.xyz1 = new Coord(x1, y1, z);
         this.xyz2 = new Coord(x2, y2, z);
+        this.symbol = '=';
+    }
+    // Two {x,y} coordinates that have to be located on the same z-axis plane; custom symbol
+    public Edge(int x1, int x2, int y1, int y2, int z, char symbol){
+        this.xyz1 = new Coord(x1, y1, z);
+        this.xyz2 = new Coord(x2, y2, z);
+        this.symbol = symbol;
     }
     
     // Setters
@@ -46,5 +55,10 @@ public class Edge {
     public int getY1(){ return this.xyz1.getY(); };
     public int getY2(){ return this.xyz2.getY(); };
     public int getZ(){ return this.xyz1.getZ(); }; // xyz1 and xyz2 should have equal z-plane
+    public char getSymbol() { return this.symbol; };
     
+    @Override
+    public String toString(){
+        return "x1 " + xyz1.getX() + ",y1 " + xyz1.getY() + ",x2 " + xyz2.getX() + ",y2 " + xyz2.getY() + ",z " + xyz1.getZ()  + ": symbol '" + symbol + "'";
+    }
 }

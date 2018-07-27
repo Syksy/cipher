@@ -2,14 +2,23 @@
 
 
 
+-- Installation / running >= r9 --
 
--- Installation / running --
+Netbeans IDE 8.2 used by default
+
+PostgreSQL JDBC driver in path (v42.4.2; https://jdbc.postgresql.org/download/postgresql-42.2.4.jar)
+
+PostgreSQL 10.4 installation (https://www.enterprisedb.com/downloads/postgres-postgresql-downloads ; https://wiki.postgresql.org/wiki/First_steps)
+
+
+
+-- Installation / running <= r8 --
 
 Netbeans IDE 8.2
 
 Vaadin 10.0.1 (Jun 25, 2018; https://vaadin.com/ )
 
-+ Maeven dependencies automatically installed to Netbeans
++ Maven dependencies automatically installed to Netbeans
 
 XAMPP 7.2.6 / PHP 7.2.6 (Jul 1, 2018; https://www.apachefriends.org/download.html )
 

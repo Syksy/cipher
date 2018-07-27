@@ -1,0 +1,12 @@
+===
+
+r9:
+- Moved from MySQL/MariaDB to PostgreSQL
+- edgetype and tiletype tables in the database
+
+===
+
+r1-r8:
+- Basic implementation of necessary classes
+- Edges and tiles to portrait the world
+- Basic command line to interact with Cipher

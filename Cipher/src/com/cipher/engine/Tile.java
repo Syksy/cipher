@@ -12,21 +12,28 @@ import com.cipher.sparsematrixtools.Coord;
  * @author Syksy
  */
 public class Tile {
-    private Coord xyz = new Coord(0,0,0);
-    private char symbol = '#';
+    // Location of the tile in the {x,y,z} coordinate axes
+    private Coord xyz;
+    // Symbol for naive visualizations
+    private char symbol;
     
     /*
     *   CONSTRUCTORS
     */
+    // Tile with xyz-coordinates, default symbol
     public Tile(int x, int y, int z){
         this.xyz = new Coord(x, y, z);
+        this.symbol = '.';
     }
+    // Tile with xyz-coordinates, custom symbol
     public Tile(int x, int y, int z, char symbol){
         this.xyz = new Coord(x, y, z);
         this.symbol = symbol;
     }
+    // Location at 0,0,0 and default settings
     public Tile(){
-        // Location at 0,0,0 and default settings
+        this.xyz = new Coord(0,0,0);
+        this.symbol = '.';
     }
     
     // Getters and setters
@@ -57,6 +64,6 @@ public class Tile {
     
     @Override
     public String toString(){
-        return "x " + xyz.getX() + ",y " + xyz.getY() + ",z " + xyz.getZ()  + ": " + symbol;
+        return "x " + xyz.getX() + ",y " + xyz.getY() + ",z " + xyz.getZ()  + ": symbol '" + symbol + "'";
     }
 }

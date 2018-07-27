@@ -19,12 +19,14 @@ public class Cipher {
     private static CipherDB db;
     
     public static void main(String[] args){
-        db = new CipherDB();
+        db = new CipherDB(); // When the database class is created, a connection attempt to MySQL is done together with the appropriate tables (unless they already exist)
         // Testing tiles
+        /*
         db.addTile(new Tile(1, 1, 2, '@'));
         db.addTile(new Tile(1, 1, 3, '.'));
         db.addTile(new Tile(0, 0, 0, '.'));
-        
+        */
+
         // Run Cipher testing in the command line
         Input input = new Input();
         input.CipherCmdline(db);
@@ -39,7 +41,7 @@ public class Cipher {
         for(Edge edge : edges){
             System.out.println("Edge found: " + edge + "\n");
         }
-        System.out.println("\nEnd of main\n");
+        System.out.println("\nEnd of main, disconnecting... \n");
         db.disconnect();
     }    
 }

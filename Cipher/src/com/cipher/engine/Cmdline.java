@@ -59,7 +59,6 @@ class Cmdline {
             try{
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));            
                 String input = "";
-                String[] pars = {};
                 if(verbosity>=1) System.out.println("Starting Cipher command line...\n"
                     + "Enter commands following by a line change with a spacebar as the delimiter for parameters.\n"
                     + "Type 'help' for a list of commands or 'q'/quit'/'e'/exit' for stopping this process.\n");
@@ -83,7 +82,11 @@ class Cmdline {
                         switch(command){
                             // User wishes to print the help file
                             case "help": case "h": case "commands":
-                                System.out.println(this.HelpFile());
+                                try{
+                                    System.out.println(this.HelpFile());
+                                }catch(Exception e){
+                                    System.out.println("Error printing the help string: " + e);
+                                }
                                 break;
                             // User wishes to create a tile, edge, etc
                             case "create": case "c":
@@ -91,43 +94,139 @@ class Cmdline {
                                     String par1 = this.getParAt(input, 0);
                                     switch(par1){
                                         case "tile":
-                                            db.addTile(
-                                                new Tile(
-                                                        Integer.parseInt(this.getParAt(input, 1)), // x
-                                                        Integer.parseInt(this.getParAt(input, 2)), // y
-                                                        Integer.parseInt(this.getParAt(input, 3)), // z
-                                                        this.getParAt(input, 4).charAt(0) // character symbol
-                                                    )
-                                                );
+                                            try{
+                                                System.out.println("Create tile call returned with: " + db.addTile(
+                                                    new Tile(
+                                                            Integer.parseInt(this.getParAt(input, 1)), // x
+                                                            Integer.parseInt(this.getParAt(input, 2)), // y
+                                                            Integer.parseInt(this.getParAt(input, 3)), // z
+                                                            this.getParAt(input, 4).charAt(0) // Tile character symbol
+                                                        )
+                                                    ));
+                                            }catch(Exception e){
+                                                System.out.println("'create tile' error: " + e);
+                                            }
                                             break;
                                         case "edge":
-                                            db.addEdge(
-                                                new Edge(
-                                                        Integer.parseInt(this.getParAt(input, 1)), // x1
-                                                        Integer.parseInt(this.getParAt(input, 2)), // y1
-                                                        Integer.parseInt(this.getParAt(input, 3)), // x2
-                                                        Integer.parseInt(this.getParAt(input, 4)), // y2
-                                                        Integer.parseInt(this.getParAt(input, 5)) // z
-                                                    )
-                                                );
+                                            try{
+                                                if(verbosity>=1) System.out.println("Creating tile...\n");
+                                                System.out.println("Create edge call returned with: " + db.addEdge(
+                                                    new Edge(
+                                                            Integer.parseInt(this.getParAt(input, 1)), // x1
+                                                            Integer.parseInt(this.getParAt(input, 2)), // y1
+                                                            Integer.parseInt(this.getParAt(input, 3)), // x2
+                                                            Integer.parseInt(this.getParAt(input, 4)), // y2
+                                                            Integer.parseInt(this.getParAt(input, 5)), // z
+                                                            this.getParAt(input, 6).charAt(0) // Edge character symbol
+                                                        )
+                                                    ));
+                                            }catch(Exception e){
+                                                System.out.println("'create edge' error: " + e);
+                                            }
                                             break;
-
                                         default:
-
+                                            if(verbosity>=1) System.out.println("Invalid first parameter for 'create': " + this.getParAt(input, 0) + "\n");
                                             break;
                                     }
                                 }else{
-                                    if(verbosity>=1) System.out.println("Illegal number of parameters provided for 'create': " + this.npars(input));
+                                    if(verbosity>=1) System.out.println("Illegal number of parameters provided for 'create': " + this.npars(input) + "\n");
+                                }
+                                break;
+                            // Deleting stuff
+                            case "delete": case "d":
+                                if(this.npars(input)>=2){
+                                    String par1 = this.getParAt(input, 0);
+                                    switch(par1){
+                                        // Delete a tile from DB
+                                        case("tile"):
+                                            try{
+                                                if(verbosity>=1) System.out.println("Deleting tile...\n");
+                                                System.out.println("Delete tile call returned with: " + db.deteleTile(
+                                                        Integer.parseInt(this.getParAt(input, 1)), 
+                                                        Integer.parseInt(this.getParAt(input, 2)), 
+                                                        Integer.parseInt(this.getParAt(input, 3))
+                                                    )                                                    
+                                                );
+                                            }catch(Exception e){
+                                                System.out.println("'delete tile' error: " + e);
+                                            }
+                                            break;
+                                        // Delete an edge from DB
+                                        case("edge"):
+                                            try{
+                                                if(verbosity>=1) System.out.println("Deleting edge...\n");
+                                                System.out.println("Delete edge call returned with: " + db.deteleEdge(
+                                                        Integer.parseInt(this.getParAt(input, 1)), 
+                                                        Integer.parseInt(this.getParAt(input, 2)), 
+                                                        Integer.parseInt(this.getParAt(input, 3)),
+                                                        Integer.parseInt(this.getParAt(input, 4)),
+                                                        Integer.parseInt(this.getParAt(input, 5))
+                                                    )                                                    
+                                                );
+                                            }catch(Exception e){
+                                                System.out.println("'delete edge' error: " + e);
+                                            }
+                                            break;
+                                        default:
+                                            if(verbosity>=1) System.out.println("Invalid first parameter for 'delete': " + this.getParAt(input, 0) + "\n");
+                                            break;
+                                    }
                                 }
                                 break;
                             // User wishes to print information from the base such as all the tiles or a particular tile at given coordinates
                             case "print": case "p":
+                                if(this.npars(input)>=1){
+                                    String par1 = this.getParAt(input, 0);
+                                    switch(par1){
+                                        // Loop through the z-axis and print symbol tile/edge representation for the map {x,y} at each z-value
+                                        case "map":
+                                            try{
+                                                //
+                                            }catch(Exception e){
+                                                System.out.println("'print map' error: " + e);
+                                            }
+                                            break;
+                                        // Print a {x,y} symbol tile/edge map slice at specific z-value given as a parameter
+                                        case "slice":
+                                            try{
+                                                //
+                                            }catch(Exception e){
+                                                System.out.println("'print slice' error: " + e);
+                                            }
+                                            break;
+                                        // Print all tiles in the database
+                                        case "tiles":
+                                            try{
+                                                System.out.println(db.getTiles());
+                                            }catch(Exception e){
+                                                System.out.println("'print tiles' error: " + e);
+                                            }
+                                            break;
+                                        // Print all edges in the database
+                                        case "edges":
+                                            try{
+                                                System.out.println(db.getEdges());
+                                            }catch(Exception e){
+                                                System.out.println("'print edges' error: " + e);
+                                            }
+                                            break;
+                                        default:
+                                            if(verbosity>=1) System.out.println("Invalid first parameter for 'print': " + this.getParAt(input, 0) + "\n");
+                                            break;
+                                    }
+                                }else{
+                                    if(verbosity>=1) System.out.println("Illegal number of parameters provided for 'print': " + this.npars(input) + "\n");
+                                }
                                 
                                 break;
                             // Set level of verbosity to an integer
                             case "verbosity": case "v":
-                                this.verbosity = Integer.parseInt(this.getParAt(input, 0));
-                                if(verbosity>=1) System.out.println("Command line verbosity level changed to: " + this.verbosity);
+                                try{
+                                    this.verbosity = Integer.parseInt(this.getParAt(input, 0));
+                                    if(verbosity>=1) System.out.println("Command line verbosity level changed to: " + this.verbosity);
+                                }catch(Exception e){
+                                    System.out.println("Error changing verbosity: " + e);
+                                }
                                 break;
                             // Informing the user that an unidentified command was provided    
                             default:
@@ -151,14 +250,14 @@ class Cmdline {
         // Print all available commands into the command line
         public String HelpFile(){
             String help =
-                    "\n\n" + 
+                    "\n" + 
                     "\n== Cipher command line help == " +
                     "\n help|h|commands: this help file" + // Line 2 
                     "\n create [tile/edge]: " + // etc
-                    "\n print: TODO" + // etc
+                    "\n delete [tile/edge]: " + // etc
+                    "\n print: [tiles/edges]" + // etc
                     "\n verbosity [0/1/2]: Set level of verbosity (0 = silent, 1 = standard, 2 = debug)" + // etc
-                    "\n\n" + 
-                    "";
+                    "\n";
             return help;
         }
     }
