@@ -1,5 +1,11 @@
 ===
 
+r10:
+- Outlining an isometric 60x60 unit box layout for a first attempt at a visualized world view
+- Tuning some minor stuff, lots of clean-up left on TODO
+
+===
+
 r9:
 - Moved from MySQL/MariaDB to PostgreSQL
 - edgetype and tiletype tables in the database
