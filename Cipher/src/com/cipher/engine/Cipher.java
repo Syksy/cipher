@@ -8,7 +8,8 @@ package com.cipher.engine;
 // Cipher DB handling
 import com.cipher.db.*;
 import com.cipher.engine.Cmdline.Input;
-import java.util.List;
+//import com.cipher.engine.Gfx;
+//import java.util.List;
 
 
 /**
@@ -27,10 +28,18 @@ public class Cipher {
         db.addTile(new Tile(0, 0, 0, '.'));
         */
 
-        // Run Cipher testing in the command line
+        // Test rendering a tile
+        Gfx gfx = new Gfx();
+        // Test render
+        gfx.Rasterize(new Tile(0,0,0));
+        // Test rendering a map
+        
+        
+        // Run Cipher command line
         Input input = new Input();
         input.CipherCmdline(db);
         
+        /*
         List<Tile> tiles = db.getTiles();
         System.out.println("Nrow in tiles: " + tiles.size() + "\n");
         for(Tile tile : tiles){
@@ -41,6 +50,7 @@ public class Cipher {
         for(Edge edge : edges){
             System.out.println("Edge found: " + edge + "\n");
         }
+        */
         System.out.println("\nEnd of main, disconnecting... \n");
         db.disconnect();
     }    

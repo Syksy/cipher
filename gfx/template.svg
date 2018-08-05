@@ -185,9 +185,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.5"
-     inkscape:cx="555.92866"
-     inkscape:cy="575.93356"
+     inkscape:zoom="1"
+     inkscape:cx="459.45742"
+     inkscape:cy="463.47755"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -299,13 +299,17 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="206.39999"
-       y="444.01584"
+       y="442.01584"
        id="text8108"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8110"
          x="206.39999"
-         y="444.01584">&quot;unit box&quot;</tspan></text>
+         y="442.01584">&quot;unit box&quot;,</tspan><tspan
+         sodipodi:role="line"
+         x="206.39999"
+         y="454.51584"
+         id="tspan13390">i.e. contents of a single tile is a 1x1x1 cube</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -345,13 +349,24 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="79.599998"
-       y="524.61591"
+       y="520.61591"
        id="text8478"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan8480"
          x="79.599998"
-         y="524.61591">approx 30 degree angle</tspan></text>
+         y="520.61591"
+         style="font-size:7.5px">exact angle; sin(x) = 30/</tspan><tspan
+         sodipodi:role="line"
+         x="79.599998"
+         y="529.99091"
+         id="tspan13408"
+         style="font-size:7.5px">                               sqrt(10^2 </tspan><tspan
+         sodipodi:role="line"
+         x="79.599998"
+         y="539.36591"
+         style="font-size:7.5px"
+         id="tspan13410">                               + 30^2)</tspan></text>
     <path
        sodipodi:nodetypes="cccc"
        inkscape:connector-curvature="0"
@@ -1348,7 +1363,7 @@
          y="444.01584"
          x="433.93994"
          id="tspan9103"
-         sodipodi:role="line">textured tile</tspan><tspan
+         sodipodi:role="line">textured tile bottom</tspan><tspan
          y="456.51584"
          x="433.93994"
          sodipodi:role="line"
@@ -4620,5 +4635,48 @@
          x="650.87677"
          y="354.45532"
          style="font-size:7.5px;text-align:center;text-anchor:middle;fill:#ff00ff;stroke-width:0.99999845;stroke-miterlimit:4;stroke-dasharray:none">{5,1,0}</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:2,2;stroke-dashoffset:0"
+       d="m 55.333333,520.3622 0,-10.33333 27,0"
+       id="path13392"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ff00ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 55.200385,513.88436 c 4.31143,0.0294 5.133664,0.48105 7.132948,3.81118"
+       id="path13394"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ff00ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 64.017341,509.44313 74.638728,498.82174"
+       id="path13396"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ff00ff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 55.057803,515.22348 39.523121,499.68879"
+       id="path13398"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="27.381504"
+       y="498.14832"
+       id="text13400"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan13402"
+         x="27.381504"
+         y="498.14832">10px</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="65.196533"
+       y="498.00381"
+       id="text13404"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan13406"
+         x="65.196533"
+         y="498.00381">30px</tspan></text>
   </g>
 </svg>

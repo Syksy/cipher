@@ -1,5 +1,13 @@
 ===
 
+r11:
+- Basic graphics engine to render static tile/edge maps
+- Edges extended to be able to work over z-shifts (i.e. floors/ceilings)
+- Map class for convenient bundling of Tile/Edge class members
+- Full stack development testing with Spring/Vaadin
+
+===
+
 r10:
 - Outlining an isometric 60x60 unit box layout for a first attempt at a visualized world view
 - Tuning some minor stuff, lots of clean-up left on TODO

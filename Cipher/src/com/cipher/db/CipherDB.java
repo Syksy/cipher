@@ -22,6 +22,7 @@ import java.util.ArrayList;
 // Cipher engine
 import com.cipher.engine.Tile;
 import com.cipher.engine.Edge;
+import com.cipher.engine.Map;
 
 /**
  *
@@ -69,11 +70,11 @@ public class CipherDB {
             );
             // Create the table for edges that lie between tiles (on a z-axis plane)
             statement.addBatch("CREATE TABLE IF NOT EXISTS cipherdb.edges(" 
-                    + "x1 INT, y1 INT, x2 INT, y2 INT, z INT, " // Uniquely define the edge location on a certain z plane
-                    + "edgetypeid INT," // Key for obtaining the type of edge that is present
+                    + "x1 INT, x2 INT, y1 INT, y2 INT, z1 INT, z2 INT, " // Uniquely define the edge location on a certain z plane
+                    + "edgetypeid INT, " // Key for obtaining the type of edge that is present
                     + "symbol CHAR(1), " // For naive visualizations a character symbol is used
                     //+ "properties xml, " // Edge properties are stored using XML formatting or such, allowing flexibility
-                    + "PRIMARY KEY (x1, y1, x2, y2, z)" // To access an edge one has to provide two {x,y} coordinates on a z plane
+                    + "PRIMARY KEY (x1, x2, y1, y2, z1, z2)" // To access an edge one has to provide two {x,y} coordinates on a z plane
                     + ")"
             );
             // Create a table that describes tile characteristics with a unique identifier
@@ -85,6 +86,13 @@ public class CipherDB {
             );
             // Create a table that describes edge characteristics with a unique identifier
             statement.addBatch("CREATE TABLE IF NOT EXISTS cipherdb.edgetypes("
+                    + "id INT, " // Unique identifier number for edge
+                    + "properties JSON, " // Parameters that define what the edge characteristics are like; allows flexibility for future extensions, though specific columns might be efficient aand safer (i.e. strong typing) for specific implentations
+                    + "PRIMARY KEY (id)" // Tile types are retrieved using the unique id key
+                    + ")"
+            );
+            // Create a table that describes buildings
+            statement.addBatch("CREATE TABLE IF NOT EXISTS cipherdb.buildings("
                     + "id INT, " // Unique identifier number for edge
                     + "properties JSON, " // Parameters that define what the edge characteristics are like; allows flexibility for future extensions, though specific columns might be efficient aand safer (i.e. strong typing) for specific implentations
                     + "PRIMARY KEY (id)" // Tile types are retrieved using the unique id key
@@ -132,16 +140,17 @@ public class CipherDB {
         try{
             System.out.print("\nFetching edges...\n");       
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z, symbol, edgetypeid FROM cipherdb.edges");
+            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z1, z2, symbol, edgetypeid FROM cipherdb.edges");
             while(resultSet.next()){
                //Retrieve by column name
                int x1 = resultSet.getInt("x1");
-               int y1 = resultSet.getInt("y1");
                int x2 = resultSet.getInt("x2");
+               int y1 = resultSet.getInt("y2");
                int y2 = resultSet.getInt("y2");
-               int z = resultSet.getInt("z");
+               int z1 = resultSet.getInt("z1");
+               int z2 = resultSet.getInt("z2");
                char symbol = (char) resultSet.getString("symbol").charAt(0);
-               edges.add(new Edge(x1,y1,x2,y2,z, symbol));
+               edges.add(new Edge(x1,x2,y1,y2,z1,z2,symbol));
             }
             //resultSet.close();
             //statement.close();
@@ -150,11 +159,52 @@ public class CipherDB {
         }
         return edges;
     }
-    // Get a slice of the {x,y} tiling at a z-slice'
-    // ...
-    // Construct a map that consists of tiles and edges (?)
-    // Probably better not to create a map class, instead stick to tiles and edges
-    // ...
+    // Create a map of tiles and edges based on the database
+    public Map getMap(){
+        System.out.println("Construcing a tile/edge map...\n");
+        return new Map(this.getTiles(), this.getEdges());
+    }    
+    // Get a slice of the {x,y} tiling that touches at a certian z-slice
+    public Map getSlice(int zplane){
+        List<Tile> tiles = new ArrayList<Tile>();
+        try{
+            statement = connection.createStatement();
+            // Conditional that z is a certain value for tile Coord
+            resultSet = statement.executeQuery("SELECT x, y, z, symbol, tiletypeid FROM cipherdb.tiles WHERE z = " + zplane);
+            while(resultSet.next()){
+               //Retrieve by column name
+               int x = resultSet.getInt("x");
+               int y = resultSet.getInt("y");
+               int z = resultSet.getInt("z");
+               char symbol = (char) resultSet.getString("symbol").charAt(0);
+               tiles.add(new Tile(x,y,z,symbol));
+            }
+        }catch(Exception e){
+                System.out.print("\nError fetching tiles in getSlice: " + e + "\n");       
+        }
+        List<Edge> edges = new ArrayList<Edge>();
+        try{
+            System.out.print("\nFetching edges...\n");       
+            statement = connection.createStatement();
+            // Conditional that the edge has to touch the given z plane
+            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z1, z2, symbol, edgetypeid FROM cipherdb.edges WHERE (z1 = " + zplane + " OR z2 = " + zplane + ")");
+            while(resultSet.next()){
+               //Retrieve by column name
+               int x1 = resultSet.getInt("x1");
+               int x2 = resultSet.getInt("x2");
+               int y1 = resultSet.getInt("y2");
+               int y2 = resultSet.getInt("y2");
+               int z1 = resultSet.getInt("z1");
+               int z2 = resultSet.getInt("z2");
+               char symbol = (char) resultSet.getString("symbol").charAt(0);
+               edges.add(new Edge(x1,x2,y1,y2,z1,z2,symbol));
+            }
+        }catch(Exception e){
+                System.out.print("\nError fetching edges: " + e + "\n");       
+        }
+        return new Map(tiles, edges);
+    }
+
     
     /*
     * Add
@@ -174,7 +224,7 @@ public class CipherDB {
     // Add a Cipher edge to the database
     public boolean addEdge(Edge edge){
         try{
-            String str = "INSERT INTO cipherdb.edges(x1, y1, x2, y2, z, symbol, edgetypeid) VALUES(" + edge.getX1() + ", " + edge.getY1() + ", " + edge.getX2() + ", " + edge.getY2() + ", " + edge.getZ() + ", '" + edge.getSymbol() + "', 0)";
+            String str = "INSERT INTO cipherdb.edges(x1, x2, y1, y2, z1, z2, symbol, edgetypeid) VALUES(" + edge.getX1() + ", " + edge.getX2() + ", " + edge.getY1() + ", " + edge.getY2() + ", " + edge.getZ1() + ", " + edge.getZ2() + ", '" + edge.getSymbol() + "', 0)";
             statement.addBatch(str);
             statement.executeBatch();
             return true;
@@ -183,6 +233,9 @@ public class CipherDB {
             return false;
         }
     }
+    /*
+    *   Removal/deleting of entries in DB
+    */
     // Remove a Cipher tile at a specific position
     public boolean deteleTile(int x, int y, int z){
         try{
@@ -196,9 +249,9 @@ public class CipherDB {
         }
     }
     // Remove a Cipher edge at a specific position
-    public boolean deteleEdge(int x1, int y1, int x2, int y2, int z){
+    public boolean deteleEdge(int x1, int x2, int y1, int y2, int z1, int z2){
         try{
-            String str = "DELETE FROM cipherdb.edges WHERE x1 = " + x1 + " AND y1 = " + y1 + " AND x2 = " + x2 + " AND y2 = " + y2 + " AND z = " + z + ";";
+            String str = "DELETE FROM cipherdb.edges WHERE x1 = " + x1 + " AND x2 = " + x2 + " AND y1 = " + y1 + " AND y2 = " + y2 + " AND z1 = " + z1 + " AND z2 = " + z2 + ";";
             statement.addBatch(str);
             statement.executeBatch();
             return true;
