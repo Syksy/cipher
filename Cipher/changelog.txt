@@ -1,4 +1,11 @@
 ===
+r12:
+- Basic rendering of edges and tiles
+- enum Facing is determining direction (compass directions in addition to z-shifts) 
+- Obtaining slices from the z-planes
+- Command line allows testing of rasterized naive PNG bitmap images maps consisting of edges and tiles (i.e. isometric view to the map)
+
+===
 
 r11:
 - Basic graphics engine to render static tile/edge maps

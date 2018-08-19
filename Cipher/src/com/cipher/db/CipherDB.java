@@ -164,7 +164,7 @@ public class CipherDB {
         System.out.println("Construcing a tile/edge map...\n");
         return new Map(this.getTiles(), this.getEdges());
     }    
-    // Get a slice of the {x,y} tiling that touches at a certian z-slice
+    // Get a slice of the {x,y} tiling that touches at a certain z-axis plane, as this is the height axis
     public Map getSlice(int zplane){
         List<Tile> tiles = new ArrayList<Tile>();
         try{
@@ -200,7 +200,7 @@ public class CipherDB {
                edges.add(new Edge(x1,x2,y1,y2,z1,z2,symbol));
             }
         }catch(Exception e){
-                System.out.print("\nError fetching edges: " + e + "\n");       
+                System.out.print("\nError fetching edges in getSlice: " + e + "\n");       
         }
         return new Map(tiles, edges);
     }
@@ -233,6 +233,8 @@ public class CipherDB {
             return false;
         }
     }
+    
+    
     /*
     *   Removal/deleting of entries in DB
     */

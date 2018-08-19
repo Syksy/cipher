@@ -1,9 +1,3 @@
-/Vaadin/target/
 /nbproject/private/
-/VaadinGUI/VaadinGUI/nbproject/private/
-/VaadinGUI/VaadinGUI/VaadinGUI-backend/target/
-/VaadinGUI/VaadinGUI/VaadinGUI-widgetset/target/
-/VaadinGUI/VaadinGUI/VaadinGUI-ui/target/
-/VaadinGUI/VaadinGUI/VaadinGUI-production/target/
 /build/
-/dist/
+/test/

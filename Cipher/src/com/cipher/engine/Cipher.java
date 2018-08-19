@@ -29,9 +29,10 @@ public class Cipher {
         */
 
         // Test rendering a tile
-        Gfx gfx = new Gfx();
+        //Gfx gfx = new Gfx();
         // Test render
-        gfx.Rasterize(new Tile(0,0,0));
+        //gfx.Rasterize(new Tile(0,0,0));
+        //gfx.Rasterize(new Edge(0,0,0,1,0,0)); // Edge facing to x+1
         // Test rendering a map
         
         

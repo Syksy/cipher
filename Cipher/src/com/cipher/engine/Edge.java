@@ -59,6 +59,8 @@ public class Edge {
     public int getZ1(){ return this.xyz1.getZ(); }; 
     public int getZ2(){ return this.xyz2.getZ(); }; 
     public char getSymbol() { return this.symbol; };
+    public Coord getCoords1() { return this.xyz1; }
+    public Coord getCoords2() { return this.xyz2; }
     
     @Override
     public String toString(){

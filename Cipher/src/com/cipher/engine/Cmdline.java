@@ -193,7 +193,7 @@ class Cmdline {
                                             // Print a {x,y} symbol tile/edge map slice at specific z-value given as a parameter
                                             case "slice": case "s":
                                                 try{
-                                                    // TODO
+                                                    System.out.println(db.getSlice(Integer.parseInt(this.getParAt(input, 1))));
                                                 }catch(Exception e){
                                                     System.out.println("'print slice' error: " + e);
                                                 }
@@ -232,6 +232,27 @@ class Cmdline {
                                         System.out.println("Error changing verbosity: " + e);
                                     }
                                     break;
+                                // Render/rasterize images of tiles, edges, or maps consisting of a mixture of the two
+                                case "render": case "r":
+                                    if(this.npars(input)>=1){
+                                        String par1 = this.getParAt(input, 0);
+                                        switch(par1){
+                                            // Loop through the z-axis and print symbol tile/edge representation for the map {x,y} at each z-value
+                                            case "map": case "m":
+                                                // TODO
+                                                //Gfx gfx = new Gfx();
+                                                Gfx.setCenter(500, 500);
+                                                Gfx.setSize(1000, 1000);
+                                                Gfx.Rasterize(db.getMap());
+                                                break;
+                                            default:
+                                                if(verbosity>=1) System.out.println("Invalid first parameter for 'render': " + this.getParAt(input, 0) + "\n");
+                                                break;
+                                        }
+                                    }else{
+                                        if(verbosity>=1) System.out.println("Illegal number of parameters provided for 'render': " + this.npars(input) + "\n");
+                                    }
+                                    break;
                                 // Informing the user that an unidentified command was provided    
                                 default:
                                     if(verbosity>=1) System.out.println("Unknown Cipher command: " + command + "\n");
@@ -243,7 +264,7 @@ class Cmdline {
                     }
                     // Indicate Cipher console with a '> '-prefix
                     System.out.print("> ");
-                    // Sanitize, lower case and trim the input string to avoid potential issues
+                    // Sanitize, lower case and trim the input string to avoid potential security or interpretbility issues
                     input = this.sanitize(reader.readLine().toLowerCase().trim());
                 }
                 if(verbosity>=1) System.out.println("Stopping Cipher command line...\n");
@@ -268,6 +289,10 @@ class Cmdline {
                     "\n delete {tile/edge}: Delete a tile or an edge depending on the first parameter (further parameters required as indicated below)" + // etc
                     "\n delete tile x y z symbol [INT INT INT CHAR(1)]" +
                     "\n delete edge x1 x2 y1 y2 z1 z2 [INT INT INT INT INT INT]" +
+                    "\n render {tile/edge/map}: Create a PNG representation of the object" +
+                    "\n render tile x y z [INT INT INT]: - -" +
+                    "\n render edge x1 x2 y1 y2 z1 z2 [INT INT INT INT INT INT]: - -" +
+                    "\n render map: - -" +
                     "\n print {map/tiles/edges}" + // etc
                     "\n verbosity {0/1/2/...} [INT]: Set level of verbosity (0 = silent, 1 = standard, 2 = debug)" + // etc
                     "\n";

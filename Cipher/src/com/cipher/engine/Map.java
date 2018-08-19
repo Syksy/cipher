@@ -107,6 +107,12 @@ public class Map {
     public List<Edge> getEdges(){
         return this.edges;
     }
+    public int getTileCount(){
+        return this.tiles.size();
+    }
+    public int getEdgeCount(){
+        return this.edges.size();
+    }
     
     // Return a list of tiles and edges; may be an ASCII representation also (unless it is its own function)
     @Override

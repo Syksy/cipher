@@ -53,6 +53,22 @@ public class Coord{
         this.z = z;
     }
     
+    /*
+    * Other functions
+    */
+    
+    // Sum two Coords    
+    public Coord add(Coord another){
+        this.x += another.getX();
+        this.y += another.getY();
+        this.z += another.getZ();
+        return this;
+    }
+    // toString for printing a Coord
+    @Override
+    public String toString(){
+        return "{" + this.x + "," + this.y + "," + this.z + "}";
+    }
 }
 
 
