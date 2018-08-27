@@ -1,4 +1,12 @@
 ===
+r13:
+- Edge now inherits Tile class; Edge is a special case of a Tile
+- Removing redundancy in code due to Edge inheriting Tile
+- Edge incorporates the enum Facing, which indicates to which direction the side is pointing
+- Ordered SQL SELECT calls
+- Gfx engine represents "render map" calls properly for a bit of eye-candy
+
+===
 r12:
 - Basic rendering of edges and tiles
 - enum Facing is determining direction (compass directions in addition to z-shifts) 

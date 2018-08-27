@@ -12,58 +12,51 @@ import com.cipher.sparsematrixtools.Coord;
  *
  * @author Syksy
  */
-public class Edge {
-    // Edge can be defined uniquely using two tiles, for which the z-plane value is equal
-    private Coord xyz1;
-    private Coord xyz2;
-    // Symbol for naive visualizations
-    private char symbol;
+public class Edge extends Tile {
+    // Edge is uniquely defined by its location and which side it is 'Facing' to
+    // Coord xyz and char symbol are inherited from Tile
+    //private Coord xyz1;
+    Facing face;
     
     // Two {x,y} coordinates that have to be located on the same z-axis plane; default symbol
-    public Edge(int x1, int x2, int y1, int y2, int z1, int z2){
-        this.xyz1 = new Coord(x1, y1, z1);
-        this.xyz2 = new Coord(x2, y2, z2);
-        this.symbol = '=';
-    }
-    // Two {x,y} coordinates that have to be located on the same z-axis plane; custom symbol
-    public Edge(int x1, int x2, int y1, int y2, int z1, int z2, char symbol){
-        this.xyz1 = new Coord(x1, y1, z1);
-        this.xyz2 = new Coord(x2, y2, z2);
+    public Edge(int x, int y,int z, Facing face, char symbol){
+        this.xyz = new Coord(x, y, z);
+        this.face = face;
         this.symbol = symbol;
+        
+    }
+    public Edge(int x, int y,int z, Facing face){
+        this.xyz = new Coord(x, y, z);
+        this.face = face;
+        this.symbol = '-';
+        
     }
     
     // Setters
-    public void setX1(int x1){
-        this.xyz1.setX(x1);
+    // Moved to parent class Tile
+    /*
+    public void setX(int x){
+        this.xyz.setX(x);
     }
-    public void setX2(int x2){
-        this.xyz2.setX(x2);
+    public void setY(int y){
+        this.xyz.setY(y);
     }
-    public void setY1(int y1){
-        this.xyz1.setY(y1);
+    public void setZ(int z){
+        this.xyz.setZ(z);
     }
-    public void setY2(int y2){
-        this.xyz2.setY(y2);
-    }
-    public void setZ1(int z){
-        this.xyz1.setZ(z);
-    }
-    public void setZ2(int z){
-        this.xyz2.setZ(z);
-    }
+    */
     // Getters
-    public int getX1(){ return this.xyz1.getX(); };
-    public int getX2(){ return this.xyz2.getX(); };
-    public int getY1(){ return this.xyz1.getY(); };
-    public int getY2(){ return this.xyz2.getY(); };
-    public int getZ1(){ return this.xyz1.getZ(); }; 
-    public int getZ2(){ return this.xyz2.getZ(); }; 
-    public char getSymbol() { return this.symbol; };
-    public Coord getCoords1() { return this.xyz1; }
-    public Coord getCoords2() { return this.xyz2; }
+    // Redundancy now due to inheritance from Tile
+    //public int getX(){ return this.xyz.getX(); }
+    //public int getY(){ return this.xyz.getY(); }
+    //public int getZ(){ return this.xyz.getZ(); }
+    //public char getSymbol() { return this.symbol; }
+    //public Coord getCoords() { return this.xyz; }
+    public Facing getFacing() { return this.face; }
     
     @Override
     public String toString(){
-        return "x1 " + xyz1.getX() + ",y1 " + xyz1.getY() + ",x2 " + xyz2.getX() + ",y2 " + xyz2.getY() + ",z1 " + xyz1.getZ()  + ",z2 " + xyz2.getZ() + ": symbol '" + symbol + "'";
+        //return "x1 " + xyz1.getX() + ",y1 " + xyz1.getY() + ",x2 " + xyz2.getX() + ",y2 " + xyz2.getY() + ",z1 " + xyz1.getZ()  + ",z2 " + xyz2.getZ() + ": symbol '" + symbol + "'";
+        return "Edge {" + this.xyz.getX() + "," + this.xyz.getY() + "," + this.xyz.getZ() + "} with facing " + this.face;
     }
 }

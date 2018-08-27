@@ -33,20 +33,14 @@ public class Map {
         }
         for(int i=0; i<edges.size(); i++){
             // X coordinate
-            if(edges.get(i).getX1() < minx) minx = edges.get(i).getX1();
-            if(edges.get(i).getX2() < minx) minx = edges.get(i).getX2();
-            if(edges.get(i).getX1() > maxx) maxx = edges.get(i).getX1();
-            if(edges.get(i).getX2() > maxx) maxx = edges.get(i).getX2();
+            if(edges.get(i).getX() < minx) minx = edges.get(i).getX();
+            if(edges.get(i).getX() > maxx) maxx = edges.get(i).getX();
             // Y coordinate
-            if(edges.get(i).getY1() < miny) miny = edges.get(i).getY1();
-            if(edges.get(i).getY2() < miny) miny = edges.get(i).getY2();
-            if(edges.get(i).getY1() > maxy) maxy = edges.get(i).getY1();
-            if(edges.get(i).getY2() > maxy) maxy = edges.get(i).getY2();
+            if(edges.get(i).getY() < miny) miny = edges.get(i).getY();
+            if(edges.get(i).getY() > maxy) maxy = edges.get(i).getY();
             // Z coordinate
-            if(edges.get(i).getZ1() < minz) minz = edges.get(i).getZ1();
-            if(edges.get(i).getZ2() < minz) minz = edges.get(i).getZ2();
-            if(edges.get(i).getZ1() > maxz) maxz = edges.get(i).getZ1();
-            if(edges.get(i).getZ2() > maxz) maxz = edges.get(i).getZ2();            
+            if(edges.get(i).getZ() < minz) minz = edges.get(i).getZ();
+            if(edges.get(i).getZ() > maxz) maxz = edges.get(i).getZ();
         }
     }
     
@@ -64,12 +58,12 @@ public class Map {
     public void addEdge(Edge edge){
         this.edges.add(edge);
         // Check if the new addition expands the map borders
-        if(edge.getX1() < minx | edge.getX2() < minx) minx = Math.min(edge.getX1(), edge.getX2());
-        if(edge.getX1() > maxx | edge.getX2() > maxx) maxx = Math.max(edge.getX1(), edge.getX2());
-        if(edge.getY1() < miny | edge.getY2() < miny) miny = Math.min(edge.getY1(), edge.getY2());
-        if(edge.getY1() > maxy | edge.getY2() > maxy) maxy = Math.max(edge.getY1(), edge.getY2());
-        if(edge.getZ1() < minz | edge.getZ2() < minz) minz = Math.min(edge.getZ1(), edge.getZ2());
-        if(edge.getZ1() > maxz | edge.getZ2() > maxz) maxz = Math.max(edge.getZ1(), edge.getZ2());
+        if(edge.getX() < minx) minx = edge.getX();
+        if(edge.getX() > maxx) maxx = edge.getX();
+        if(edge.getY() < miny) miny = edge.getY();
+        if(edge.getY() > maxy) maxy = edge.getY();
+        if(edge.getZ() < minz) minz = edge.getZ();
+        if(edge.getZ() > maxz) maxz = edge.getZ();
     }
     
     // Checkers

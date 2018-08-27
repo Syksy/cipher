@@ -22,7 +22,7 @@ class Cmdline {
     // Static class for processing all sorts of character-based input that can interact with the Cipher engine
     public static class Input{        
         // Level of verbosity in processing the input; 0 = silent, 1 = standard user, 2 = debug, 3 = ultra-debug
-        public int verbosity = 2;
+        public int verbosity = 1;
         
         // Extract String[] command parameters following the command itself
         public String[] pars(String str){
@@ -69,7 +69,7 @@ class Cmdline {
                 input = this.sanitize(reader.readLine().toLowerCase().trim());
                 // While-loop the command line(s) until user wants to quit
                 while(!Arrays.asList("q","quit","e","exit").contains(input)){
-                    if(verbosity>=1) System.out.println("\n-- '" + input + "' called --\n");
+                    if(verbosity>=2) System.out.println("\n-- '" + input + "' called --\n");
                     String command = input.split(" ")[0];
                     // If user provides a non-empty line, try to parse and process the desired command
                     if(command!=null){
@@ -97,6 +97,7 @@ class Cmdline {
                                         switch(par1){
                                             case "tile":
                                                 try{
+                                                    if(verbosity>=1) System.out.println("Creating tile...\n");
                                                     System.out.println("Create tile call returned with: " + db.addTile(
                                                         new Tile(
                                                                 Integer.parseInt(this.getParAt(input, 1)), // x
@@ -111,16 +112,14 @@ class Cmdline {
                                                 break;
                                             case "edge":
                                                 try{
-                                                    if(verbosity>=1) System.out.println("Creating tile...\n");
+                                                    if(verbosity>=1) System.out.println("Creating edge...\n");
                                                     System.out.println("Create edge call returned with: " + db.addEdge(
                                                         new Edge(
                                                                 Integer.parseInt(this.getParAt(input, 1)), // x1
-                                                                Integer.parseInt(this.getParAt(input, 2)), // x2
-                                                                Integer.parseInt(this.getParAt(input, 3)), // y1
-                                                                Integer.parseInt(this.getParAt(input, 4)), // y2
-                                                                Integer.parseInt(this.getParAt(input, 5)), // z1
-                                                                Integer.parseInt(this.getParAt(input, 6)), // z2
-                                                                this.getParAt(input, 6).charAt(0) // Edge character symbol
+                                                                Integer.parseInt(this.getParAt(input, 2)), // z1
+                                                                Integer.parseInt(this.getParAt(input, 3)), // z2
+                                                                Facing.facings[(Integer.parseInt(this.getParAt(input, 4)))], // Facing enum
+                                                                this.getParAt(input, 5).charAt(0) // Edge character symbol
                                                             )
                                                         ));
                                                 }catch(Exception e){
@@ -159,12 +158,10 @@ class Cmdline {
                                                 try{
                                                     if(verbosity>=1) System.out.println("Deleting edge...\n");
                                                     System.out.println("Delete edge call returned with: " + db.deteleEdge(
-                                                            Integer.parseInt(this.getParAt(input, 1)), // x1
-                                                            Integer.parseInt(this.getParAt(input, 2)), // x2
-                                                            Integer.parseInt(this.getParAt(input, 3)), // y1 
-                                                            Integer.parseInt(this.getParAt(input, 4)), // y2
-                                                            Integer.parseInt(this.getParAt(input, 5)), // z1
-                                                            Integer.parseInt(this.getParAt(input, 6))  // z2
+                                                            Integer.parseInt(this.getParAt(input, 1)), // x
+                                                            Integer.parseInt(this.getParAt(input, 2)), // y 
+                                                            Integer.parseInt(this.getParAt(input, 3)), // z
+                                                            Facing.facings[Integer.parseInt(this.getParAt(input, 4))] // Facing
                                                         )                                                    
                                                     );
                                                 }catch(Exception e){
@@ -280,18 +277,18 @@ class Cmdline {
                     "\n == Cipher command line help == " +
                     "\n {opt1/opt2} indicates options opt1 and opt2 as feasible choices." +
                     "\n List of parameter types are shown in square brackets following the parameter list itself." + 
-                    "\n If you want to an ignored comment, start the line with character '#' or '%'" + 
+                    "\n If you want to comment, start the line with character '#' or '%'" + 
                     "\n ..." + 
                     "\n {help/h/commands}: this help file" + // Line 2 
                     "\n create {tile/edge}: Create a tile or an edge depending on the first parameter (further parameters required as indicated below)" + // etc
                     "\n create tile x y z symbol [INT INT INT CHAR(1)]" +
-                    "\n create edge x1 x2 y1 y2 z1 z2 symbol [INT INT INT INT INT INT CHAR(1)]" +
+                    "\n create edge x y z face symbol [INT INT INT INT CHAR(1)]" +
                     "\n delete {tile/edge}: Delete a tile or an edge depending on the first parameter (further parameters required as indicated below)" + // etc
-                    "\n delete tile x y z symbol [INT INT INT CHAR(1)]" +
-                    "\n delete edge x1 x2 y1 y2 z1 z2 [INT INT INT INT INT INT]" +
+                    "\n delete tile x y z [INT INT INT]" +
+                    "\n delete edge x y z face [INT INT INT INT]" +
                     "\n render {tile/edge/map}: Create a PNG representation of the object" +
                     "\n render tile x y z [INT INT INT]: - -" +
-                    "\n render edge x1 x2 y1 y2 z1 z2 [INT INT INT INT INT INT]: - -" +
+                    "\n render edge x y z face [INT INT INT INT]: - -" +
                     "\n render map: - -" +
                     "\n print {map/tiles/edges}" + // etc
                     "\n verbosity {0/1/2/...} [INT]: Set level of verbosity (0 = silent, 1 = standard, 2 = debug)" + // etc

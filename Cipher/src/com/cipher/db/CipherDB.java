@@ -22,6 +22,7 @@ import java.util.ArrayList;
 // Cipher engine
 import com.cipher.engine.Tile;
 import com.cipher.engine.Edge;
+import com.cipher.engine.Facing;
 import com.cipher.engine.Map;
 
 /**
@@ -70,11 +71,11 @@ public class CipherDB {
             );
             // Create the table for edges that lie between tiles (on a z-axis plane)
             statement.addBatch("CREATE TABLE IF NOT EXISTS cipherdb.edges(" 
-                    + "x1 INT, x2 INT, y1 INT, y2 INT, z1 INT, z2 INT, " // Uniquely define the edge location on a certain z plane
+                    + "x INT, y INT, z INT, face INT, " // Uniquely define the edge location on a certain z plane
                     + "edgetypeid INT, " // Key for obtaining the type of edge that is present
                     + "symbol CHAR(1), " // For naive visualizations a character symbol is used
                     //+ "properties xml, " // Edge properties are stored using XML formatting or such, allowing flexibility
-                    + "PRIMARY KEY (x1, x2, y1, y2, z1, z2)" // To access an edge one has to provide two {x,y} coordinates on a z plane
+                    + "PRIMARY KEY (x, y, z, face)" // To access an edge one has to provide two {x,y} coordinates on a z plane
                     + ")"
             );
             // Create a table that describes tile characteristics with a unique identifier
@@ -118,7 +119,7 @@ public class CipherDB {
         try{
             System.out.print("\nFetching tiles...\n");       
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT x, y, z, symbol, tiletypeid FROM cipherdb.tiles");
+            resultSet = statement.executeQuery("SELECT x, y, z, symbol, tiletypeid FROM cipherdb.tiles ORDER BY x DESC, y DESC, z DESC");
             while(resultSet.next()){
                //Retrieve by column name
                int x = resultSet.getInt("x");
@@ -140,17 +141,16 @@ public class CipherDB {
         try{
             System.out.print("\nFetching edges...\n");       
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z1, z2, symbol, edgetypeid FROM cipherdb.edges");
+            resultSet = statement.executeQuery("SELECT x, y, z, face, symbol, edgetypeid FROM cipherdb.edges ORDER BY x DESC, y DESC, z DESC, face");
             while(resultSet.next()){
                //Retrieve by column name
-               int x1 = resultSet.getInt("x1");
-               int x2 = resultSet.getInt("x2");
-               int y1 = resultSet.getInt("y2");
-               int y2 = resultSet.getInt("y2");
-               int z1 = resultSet.getInt("z1");
-               int z2 = resultSet.getInt("z2");
-               char symbol = (char) resultSet.getString("symbol").charAt(0);
-               edges.add(new Edge(x1,x2,y1,y2,z1,z2,symbol));
+               int x = resultSet.getInt("x");
+               int y = resultSet.getInt("y");
+               int z = resultSet.getInt("z");
+               Facing face = Facing.facings[resultSet.getInt("face")];
+               char symbol = (char) resultSet.getString("symbol").charAt(0);               
+               // TODO: edgetypeid
+               edges.add(new Edge(x,y,z,face,symbol));
             }
             //resultSet.close();
             //statement.close();
@@ -170,7 +170,7 @@ public class CipherDB {
         try{
             statement = connection.createStatement();
             // Conditional that z is a certain value for tile Coord
-            resultSet = statement.executeQuery("SELECT x, y, z, symbol, tiletypeid FROM cipherdb.tiles WHERE z = " + zplane);
+            resultSet = statement.executeQuery("SELECT x, y, z, symbol, tiletypeid FROM cipherdb.tiles WHERE z = " + zplane + " ORDER BY x DESC, y DESC, z DESC");
             while(resultSet.next()){
                //Retrieve by column name
                int x = resultSet.getInt("x");
@@ -187,17 +187,15 @@ public class CipherDB {
             System.out.print("\nFetching edges...\n");       
             statement = connection.createStatement();
             // Conditional that the edge has to touch the given z plane
-            resultSet = statement.executeQuery("SELECT x1, y1, x2, y2, z1, z2, symbol, edgetypeid FROM cipherdb.edges WHERE (z1 = " + zplane + " OR z2 = " + zplane + ")");
+            resultSet = statement.executeQuery("SELECT x, y, z, face, symbol, edgetypeid FROM cipherdb.edges WHERE z = " + zplane + " ORDER BY x DESC, y DESC, z DESC, face");
             while(resultSet.next()){
                //Retrieve by column name
-               int x1 = resultSet.getInt("x1");
-               int x2 = resultSet.getInt("x2");
-               int y1 = resultSet.getInt("y2");
-               int y2 = resultSet.getInt("y2");
-               int z1 = resultSet.getInt("z1");
-               int z2 = resultSet.getInt("z2");
+               int x = resultSet.getInt("x");
+               int y = resultSet.getInt("y");
+               int z = resultSet.getInt("z");
+               Facing face = Facing.facings[resultSet.getInt("face")];
                char symbol = (char) resultSet.getString("symbol").charAt(0);
-               edges.add(new Edge(x1,x2,y1,y2,z1,z2,symbol));
+               edges.add(new Edge(x,y,z,face,symbol));
             }
         }catch(Exception e){
                 System.out.print("\nError fetching edges in getSlice: " + e + "\n");       
@@ -224,12 +222,12 @@ public class CipherDB {
     // Add a Cipher edge to the database
     public boolean addEdge(Edge edge){
         try{
-            String str = "INSERT INTO cipherdb.edges(x1, x2, y1, y2, z1, z2, symbol, edgetypeid) VALUES(" + edge.getX1() + ", " + edge.getX2() + ", " + edge.getY1() + ", " + edge.getY2() + ", " + edge.getZ1() + ", " + edge.getZ2() + ", '" + edge.getSymbol() + "', 0)";
+            String str = "INSERT INTO cipherdb.edges(x, y, z, face, symbol, edgetypeid) VALUES(" + edge.getX() + ", " + edge.getY() + ", " + edge.getZ() + ", " + edge.getFacing().getLevel() + ", '" + edge.getSymbol() + "', 0)";
             statement.addBatch(str);
             statement.executeBatch();
             return true;
         }catch(Exception e){
-            System.out.print("\nError adding a tile to the CipherDB: " + e + "\n");
+            System.out.print("\nError adding an edge to the CipherDB: " + e + "\n");
             return false;
         }
     }
@@ -251,9 +249,9 @@ public class CipherDB {
         }
     }
     // Remove a Cipher edge at a specific position
-    public boolean deteleEdge(int x1, int x2, int y1, int y2, int z1, int z2){
+    public boolean deteleEdge(int x, int y, int z, Facing face){
         try{
-            String str = "DELETE FROM cipherdb.edges WHERE x1 = " + x1 + " AND x2 = " + x2 + " AND y1 = " + y1 + " AND y2 = " + y2 + " AND z1 = " + z1 + " AND z2 = " + z2 + ";";
+            String str = "DELETE FROM cipherdb.edges WHERE x = " + x + " AND y = " + y + " AND z = " + z + " AND face = " + face.getLevel() + ";";
             statement.addBatch(str);
             statement.executeBatch();
             return true;
