@@ -3,8 +3,8 @@
 
 package com.cipher.engine;
 
-public interface ProcessCommand {
+abstract public class CommandCandidate {
        
     @Override
-    public String toString();
+    abstract public String toString();
 }

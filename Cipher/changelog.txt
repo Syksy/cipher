@@ -1,4 +1,13 @@
 ===
+r14:
+- CipherDB has been changed to an abstract class instead of being an explicit implementation to a particular way of saving and reading data
+- The old PostgreSQL-based CipherDB implements such an abstraction in CipherDBPostgreSQL and is still used to demo Cipher
+- Testing CipherDB implementation with file-written JSON in CipherJSONDB to illustrate the abstraction beyond SQL relational databases
+- Working on minimalistic, dependency free JSON-parsing
+- Tidied up planned class architecture; e.g. Entity replaces Building for better abstraction, Command abstract class and its extensions etc
+- CipherParameter helps wrap generic parameters attributed to Cipher objects for which the exact class type is unknown
+
+===
 r13:
 - Edge now inherits Tile class; Edge is a special case of a Tile
 - Removing redundancy in code due to Edge inheriting Tile

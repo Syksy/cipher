@@ -3,8 +3,8 @@
 
 package com.cipher.engine;
 
-public interface PrimalCommand {
+abstract public class CommandReady {
     
     @Override
-    public String toString();
+    abstract public String toString();
 }
